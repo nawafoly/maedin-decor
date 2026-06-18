@@ -1,0 +1,11 @@
+/* React shell only. Visual styling remains in the original /style.css file. */
+[data-legacy-page] {
+  min-height: 1px;
+}
+
+.modal-body video {
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: cover;
+}

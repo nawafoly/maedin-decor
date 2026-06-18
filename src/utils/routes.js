@@ -1,0 +1,26 @@
+export const routes = {
+  home: "/",
+  about: "/about.html",
+  services: "/services.html",
+  designs: "/shop.html",
+  serviceDetails: "/single-product.html",
+  projects: "/blog.html",
+  projectStory: "/single-post.html",
+  request: "/cart.html",
+  checkout: "/checkout.html",
+  account: "/login.html",
+  admin: "/admin.html",
+  contact: "/contact.html",
+};
+
+export const legacyRouteMap = [
+  ["/index.html", "/"],
+  ["/about", routes.about],
+  ["/services", routes.services],
+  ["/designs", routes.designs],
+  ["/projects", routes.projects],
+  ["/contact", routes.contact],
+  ["/request", routes.request],
+  ["/checkout", routes.checkout],
+  ["/account", routes.account],
+];
