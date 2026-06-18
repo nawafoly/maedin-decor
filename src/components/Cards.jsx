@@ -1,7 +1,10 @@
 import { Link } from "react-router-dom";
+import { useLanguage } from "../contexts/LanguageContext";
 import { routes } from "../utils/routes";
 
 export function ServiceCard({ item }) {
+  const { t } = useLanguage();
+
   return (
     <article className="forma-card service-card">
       <Link to={`${routes.serviceDetails}?id=${item.id}`} className="forma-card-media">
@@ -15,7 +18,7 @@ export function ServiceCard({ item }) {
         <p>{item.description}</p>
         <div className="card-meta">
           <span>{item.price}</span>
-          <Link to={routes.request}>Request</Link>
+          <Link to={routes.request}>{t.ui.request}</Link>
         </div>
       </div>
     </article>
@@ -23,6 +26,8 @@ export function ServiceCard({ item }) {
 }
 
 export function DesignCard({ item }) {
+  const { t } = useLanguage();
+
   return (
     <article className="forma-card design-card">
       <Link to={`${routes.serviceDetails}?design=${item.id}`} className="forma-card-media">
@@ -36,7 +41,7 @@ export function DesignCard({ item }) {
         <p>{item.description}</p>
         <div className="card-meta">
           <span>{item.price}</span>
-          <Link to={routes.request}>Request</Link>
+          <Link to={routes.request}>{t.ui.request}</Link>
         </div>
       </div>
     </article>
@@ -44,6 +49,8 @@ export function DesignCard({ item }) {
 }
 
 export function ProjectCard({ item }) {
+  const { t } = useLanguage();
+
   return (
     <article className="forma-card project-card">
       <Link to={`${routes.projectStory}?id=${item.id}`} className="forma-card-media">
@@ -57,7 +64,7 @@ export function ProjectCard({ item }) {
         <p>{item.description}</p>
         <div className="card-meta">
           <span>{item.category}</span>
-          <Link to={`${routes.projectStory}?id=${item.id}`}>View project</Link>
+          <Link to={`${routes.projectStory}?id=${item.id}`}>{t.ui.viewProject}</Link>
         </div>
       </div>
     </article>
@@ -65,6 +72,8 @@ export function ProjectCard({ item }) {
 }
 
 export function PricingCard({ item }) {
+  const { t } = useLanguage();
+
   return (
     <article className="pricing-card">
       <p className="card-kicker">{item.label}</p>
@@ -78,7 +87,7 @@ export function PricingCard({ item }) {
         ))}
       </ul>
       <Link className="btn btn-dark" to={routes.request}>
-        Select this package
+        {t.ui.selectPackage}
       </Link>
     </article>
   );

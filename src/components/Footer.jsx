@@ -1,5 +1,7 @@
-import { legacyFooter } from "../data/legacyPages";
+import { useLanguage } from "../contexts/LanguageContext";
 
 export default function Footer() {
-  return <div dangerouslySetInnerHTML={{ __html: legacyFooter }} />;
+  const { t } = useLanguage();
+
+  return <div dangerouslySetInnerHTML={{ __html: t.footer }} />;
 }

@@ -1,4 +1,5 @@
 import { useEffect } from "react";
+import { useLanguage } from "../contexts/LanguageContext";
 import { legacyPages } from "../data/legacyPages";
 
 function initQuantityControls(root) {
@@ -188,8 +189,27 @@ function initLegacyPlugins(root) {
   return () => cleanups.forEach((cleanup) => cleanup());
 }
 
-export default function LegacyPage({ page }) {
-  const html = legacyPages[page] || legacyPages.index;
+function addPageTitleLogo(html) {
+  if (html.includes("page-title-logo")) {
+    return html;
+  }
+
+  return html.replace(
+    /(<section class="page-title[^"]*">\s*<div class="container">)/,
+    '$1<a class="page-title-logo" href="/" aria-label="FORMA home"><img src="/images/logo heder 1.png" alt="FORMA"></a>',
+  );
+}
+
+function removePageTitleBreadcrumbs(html) {
+  return html.replace(/<section class="page-title[^"]*">[\s\S]*?<\/section>/g, (section) =>
+    section.replace(/\s*<p>[\s\S]*?<\/p>/g, ""),
+  );
+}
+
+export default function LegacyPage({ page, html: customHtml }) {
+  const { t, language } = useLanguage();
+  const sourceHtml = customHtml || t.pages[page] || legacyPages[page] || t.pages.index || legacyPages.index;
+  const html = addPageTitleLogo(removePageTitleBreadcrumbs(sourceHtml));
 
   useEffect(() => {
     const root = document.querySelector("[data-legacy-page]");
@@ -204,7 +224,7 @@ export default function LegacyPage({ page }) {
       window.clearTimeout(timer);
       cleanupPlugins?.();
     };
-  }, [page]);
+  }, [page, language, html]);
 
   return <div data-legacy-page={page} dangerouslySetInnerHTML={{ __html: html }} />;
 }

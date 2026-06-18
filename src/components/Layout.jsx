@@ -1,5 +1,6 @@
 import { useEffect } from "react";
 import { Outlet, useLocation, useNavigate } from "react-router-dom";
+import { useLanguage } from "../contexts/LanguageContext";
 import { legacySvg } from "../data/legacyPages";
 import Footer from "./Footer";
 import Header from "./Header";
@@ -24,12 +25,7 @@ const internalPaths = new Set([
 export default function Layout() {
   const navigate = useNavigate();
   const location = useLocation();
-
-  useEffect(() => {
-    document.documentElement.lang = "ar";
-    document.documentElement.dir = "rtl";
-    document.body.dir = "rtl";
-  }, []);
+  const { toggleLanguage } = useLanguage();
 
   useEffect(() => {
     const header = document.querySelector("#header");
@@ -73,6 +69,13 @@ export default function Layout() {
   };
 
   const handleClick = (event) => {
+    const languageButton = event.target.closest?.("[data-language-toggle]");
+    if (languageButton) {
+      event.preventDefault();
+      toggleLanguage();
+      return;
+    }
+
     const link = event.target.closest?.("a[href]");
     if (!event.target.closest?.("#search-bar")) {
       document.querySelectorAll(".search-item.is-searching").forEach((item) => {
