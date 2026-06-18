@@ -18,6 +18,8 @@ const internalPaths = new Set([
   "/cart.html",
   "/checkout.html",
   "/login.html",
+  "/register.html",
+  "/account.html",
   "/admin.html",
   "/contact.html",
 ]);
@@ -26,6 +28,7 @@ export default function Layout() {
   const navigate = useNavigate();
   const location = useLocation();
   const { toggleLanguage } = useLanguage();
+  const isAdminRoute = location.pathname === "/admin.html";
 
   useEffect(() => {
     const header = document.querySelector("#header");
@@ -113,10 +116,10 @@ export default function Layout() {
   return (
     <div onClick={handleClick} onSubmit={handleSubmit}>
       <div dangerouslySetInnerHTML={{ __html: legacySvg }} />
-      <Header />
+      {isAdminRoute ? null : <Header />}
       <Outlet />
-      <Footer />
-      <LegacyVideoModal />
+      {isAdminRoute ? null : <Footer />}
+      {isAdminRoute ? null : <LegacyVideoModal />}
     </div>
   );
 }

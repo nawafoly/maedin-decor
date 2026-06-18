@@ -2,6 +2,8 @@ import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import { createBrowserRouter, Navigate, RouterProvider } from "react-router-dom";
 import Layout from "./components/Layout";
+import { AdminProtectedRoute, CustomerProtectedRoute } from "./components/ProtectedRoute";
+import { AuthProvider } from "./contexts/AuthContext";
 import { LanguageProvider } from "./contexts/LanguageContext";
 import About from "./pages/About";
 import Account from "./pages/Account";
@@ -10,9 +12,11 @@ import Checkout from "./pages/Checkout";
 import Contact from "./pages/Contact";
 import Designs from "./pages/Designs";
 import Home from "./pages/Home";
+import Login from "./pages/Login";
 import NotFound from "./pages/NotFound";
 import ProjectStory from "./pages/ProjectStory";
 import Projects from "./pages/Projects";
+import Register from "./pages/Register";
 import Request from "./pages/Request";
 import ServiceDetails from "./pages/ServiceDetails";
 import Services from "./pages/Services";
@@ -37,8 +41,10 @@ const router = createBrowserRouter([
       { path: "single-post.html", element: <ProjectStory /> },
       { path: "cart.html", element: <Request /> },
       { path: "checkout.html", element: <Checkout /> },
-      { path: "login.html", element: <Account /> },
-      { path: "admin.html", element: <Admin /> },
+      { path: "login.html", element: <Login /> },
+      { path: "register.html", element: <Register /> },
+      { path: "account.html", element: <CustomerProtectedRoute><Account /></CustomerProtectedRoute> },
+      { path: "admin.html", element: <AdminProtectedRoute><Admin /></AdminProtectedRoute> },
       { path: "contact", element: <Navigate to="/contact.html" replace /> },
       { path: "contact.html", element: <Contact /> },
       { path: "*", element: <NotFound /> },
@@ -49,7 +55,9 @@ const router = createBrowserRouter([
 createRoot(document.getElementById("root")).render(
   <StrictMode>
     <LanguageProvider>
-      <RouterProvider router={router} />
+      <AuthProvider>
+        <RouterProvider router={router} />
+      </AuthProvider>
     </LanguageProvider>
   </StrictMode>,
 );

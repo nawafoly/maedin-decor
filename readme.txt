@@ -8,6 +8,13 @@ npm install
 npm run dev
 npm run build
 
+Cloudflare R2 uploads:
+
+- The upload API lives in workers/src/worker.js at /api/upload.
+- If the frontend is served by the Cloudflare Worker, /api/upload works as a relative path.
+- If the frontend is served by Vercel or Vite dev server, set VITE_UPLOAD_ENDPOINT to the deployed Worker upload URL.
+- Example: VITE_UPLOAD_ENDPOINT=https://maedin-decor.YOUR_SUBDOMAIN.workers.dev/api/upload
+
 Notes:
 
 - The visual identity, original CSS, Bootstrap classes, Swiper/AOS/Jarallax hooks, hover effects, and page markup were preserved as closely as possible.

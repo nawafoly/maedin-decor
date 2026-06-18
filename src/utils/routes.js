@@ -8,7 +8,9 @@ export const routes = {
   projectStory: "/single-post.html",
   request: "/cart.html",
   checkout: "/checkout.html",
-  account: "/login.html",
+  login: "/login.html",
+  register: "/register.html",
+  account: "/account.html",
   admin: "/admin.html",
   contact: "/contact.html",
 };
@@ -23,4 +25,6 @@ export const legacyRouteMap = [
   ["/request", routes.request],
   ["/checkout", routes.checkout],
   ["/account", routes.account],
+  ["/login", routes.login],
+  ["/register", routes.register],
 ];

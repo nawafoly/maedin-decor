@@ -1,0 +1,78 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    function signedIn() {
+      return request.auth != null;
+    }
+
+    function ownerEmail() {
+      return signedIn() && request.auth.token.email == "nawafoly0@gmail.com";
+    }
+
+    function userPath() {
+      return /databases/$(database)/documents/users/$(request.auth.uid);
+    }
+
+    function hasProfile() {
+      return signedIn() && exists(userPath());
+    }
+
+    function userRole() {
+      return hasProfile() ? get(userPath()).data.role : "";
+    }
+
+    function isAdmin() {
+      return ownerEmail() || userRole() in ["admin", "owner"];
+    }
+
+    function isOwner() {
+      return ownerEmail() || userRole() == "owner";
+    }
+
+    function ownsUserField() {
+      return signedIn() && request.resource.data.userId == request.auth.uid;
+    }
+
+    match /users/{uid} {
+      allow create: if signedIn()
+        && request.auth.uid == uid
+        && (
+          request.resource.data.role == "customer"
+          || (ownerEmail() && request.resource.data.role in ["admin", "owner"])
+        );
+      allow read: if isAdmin() || (signedIn() && request.auth.uid == uid);
+      allow update: if isAdmin()
+        || (
+          signedIn()
+          && request.auth.uid == uid
+          && request.resource.data.role == resource.data.role
+          && request.resource.data.accountDisabled == resource.data.accountDisabled
+        );
+      allow delete: if isOwner();
+    }
+
+    match /orders/{orderId} {
+      allow create: if isAdmin() || ownsUserField();
+      allow read: if isAdmin() || (signedIn() && resource.data.userId == request.auth.uid);
+      allow update, delete: if isAdmin();
+    }
+
+    match /invoices/{invoiceId} {
+      allow read: if isAdmin() || (signedIn() && resource.data.customerId == request.auth.uid);
+      allow create, update, delete: if isAdmin();
+    }
+
+    match /uploadsMetadata/{uploadId} {
+      allow create: if ownsUserField();
+      allow read: if isAdmin() || (signedIn() && resource.data.userId == request.auth.uid);
+      allow update, delete: if isAdmin();
+    }
+
+    match /{collectionName}/{documentId} {
+      allow read: if collectionName in ["projects", "designs", "services", "packages", "siteSettings"];
+      allow create, update, delete: if collectionName in ["projects", "designs", "services", "packages", "siteSettings"]
+        && isAdmin();
+    }
+  }
+}
