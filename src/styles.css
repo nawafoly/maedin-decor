@@ -36,16 +36,25 @@
   cursor: pointer;
 }
 
+#header-nav .navbar-brand .logo {
+  width: clamp(88px, 7.5vw, 120px);
+}
+
 @media (min-width: 992px) {
+  #header-nav {
+    min-height: 112px;
+  }
+
   #header-nav .container {
     position: relative;
   }
 
   #header-nav .navbar-brand.d-none.d-lg-block {
     position: absolute;
+    top: 50%;
     left: 50%;
     margin: 0;
-    transform: translateX(-50%);
+    transform: translate(-50%, -50%);
   }
 }
 
@@ -699,9 +708,9 @@ html[dir="rtl"] .admin-upload-list {
 }
 
 .forma-admin-files {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 6px;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+  gap: 10px;
 }
 
 .forma-admin-files a {
@@ -709,6 +718,31 @@ html[dir="rtl"] .admin-upload-list {
   background: #fffdf8;
   padding: 5px 8px;
   font-size: 0.82rem;
+}
+
+.forma-admin-file-preview {
+  min-width: 0;
+  overflow: hidden;
+  border: 1px solid rgba(33, 31, 28, 0.14);
+  border-radius: 10px;
+  background: #fff;
+}
+
+.forma-admin-file-preview img {
+  display: block;
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+}
+
+.forma-admin-file-preview span {
+  display: block;
+  overflow: hidden;
+  padding: 7px 9px;
+  color: rgba(33, 31, 28, 0.68);
+  font-size: 0.76rem;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .forma-form-message,
@@ -1015,9 +1049,10 @@ html[dir="rtl"] .admin-upload-list {
 .forma-admin-topbar {
   display: grid;
   grid-template-columns: minmax(280px, 1fr) auto;
+  gap: 20px;
   min-height: 78px;
   margin: -24px -24px 24px;
-  padding: 14px 24px;
+  padding: 12px 24px;
   border-bottom: 1px solid var(--admin-line);
   background: rgba(248, 250, 251, 0.86);
   box-shadow: 0 10px 30px rgba(24, 31, 37, 0.06);
@@ -1028,7 +1063,7 @@ html[dir="rtl"] .admin-upload-list {
   max-width: 620px;
   min-height: 48px;
   border: 1px solid var(--admin-line);
-  border-radius: 8px;
+  border-radius: 12px;
   background: var(--admin-card);
   box-shadow: 0 8px 24px rgba(24, 31, 37, 0.04);
 }
@@ -1069,8 +1104,8 @@ html[dir="rtl"] .admin-upload-list {
 }
 
 .forma-topbar-actions {
-  gap: 9px;
-  flex-wrap: wrap;
+  gap: 8px;
+  flex-wrap: nowrap;
   justify-content: flex-start;
   min-width: 0;
 }
@@ -1080,6 +1115,14 @@ html[dir="rtl"] .admin-upload-list {
 }
 
 .forma-topbar-actions .forma-admin-secondary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 48px;
+  border-radius: 12px;
+  box-shadow: none;
+  padding-block: 0;
+  text-decoration: none;
   white-space: nowrap;
 }
 
@@ -1087,12 +1130,28 @@ html[dir="rtl"] .admin-upload-list {
 .forma-admin-user {
   min-height: 48px;
   border: 1px solid var(--admin-line);
-  border-radius: 8px;
+  border-radius: 12px;
   background: var(--admin-card);
 }
 
 .forma-admin-user {
-  min-width: 190px;
+  min-width: 180px;
+  border-color: #14171a;
+  background: #14171a;
+  color: #fff;
+  padding-inline: 14px;
+}
+
+.forma-admin-topbar .forma-admin-user span {
+  color: rgba(255, 255, 255, 0.62);
+}
+
+.forma-notifications {
+  min-width: 64px;
+  align-items: center;
+  text-align: center;
+  border-color: rgba(167, 62, 55, 0.16);
+  background: rgba(167, 62, 55, 0.06);
 }
 
 .forma-notifications span {
@@ -1131,6 +1190,18 @@ html[dir="rtl"] .admin-upload-list {
   border-color: var(--admin-line);
   background: #fff;
   color: var(--admin-ink);
+}
+
+.forma-topbar-actions > a.forma-admin-secondary {
+  border-color: rgba(174, 132, 75, 0.25);
+  background: rgba(174, 132, 75, 0.08);
+  color: #76552f;
+}
+
+.forma-topbar-actions > button.forma-admin-secondary {
+  border-color: rgba(167, 62, 55, 0.18);
+  background: rgba(167, 62, 55, 0.06);
+  color: #8d3731;
 }
 
 .forma-row-actions button.is-danger {

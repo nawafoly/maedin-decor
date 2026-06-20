@@ -1,5 +1,12 @@
 import { useLanguage } from "../contexts/LanguageContext";
 
+function useCompleteNavbarLogo(html) {
+  return html.replaceAll(
+    "/images/Logo only 1.png",
+    "/images/Complete logo 1.png",
+  );
+}
+
 function removeRequestDropdown(html, requestText) {
   const requestDropdownStart = '<li class="cart-dropdown nav-item dropdown">';
   const requestLink = `<li class="nav-item"><a class="nav-link me-0" href="/cart.html">${requestText}</a></li>`;
@@ -33,10 +40,12 @@ function addLanguageSwitcher(html, label, ariaLabel) {
 
 export default function Header() {
   const { t } = useLanguage();
-  const headerHtml = addLanguageSwitcher(
-    removeRequestDropdown(t.header, t.ui.request),
-    t.meta.nextLanguageLabel,
-    t.ui.languageToggleLabel,
+  const headerHtml = useCompleteNavbarLogo(
+    addLanguageSwitcher(
+      removeRequestDropdown(t.header, t.ui.request),
+      t.meta.nextLanguageLabel,
+      t.ui.languageToggleLabel,
+    ),
   );
 
   return <div dangerouslySetInnerHTML={{ __html: headerHtml }} />;

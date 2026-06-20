@@ -92,6 +92,18 @@ function imageFromItem(item) {
   return image || "/images/product-item1.avif";
 }
 
+function fileSource(file) {
+  return typeof file === "string" ? file : file?.url || file?.key || "";
+}
+
+function isImageFile(file) {
+  const imageExtension = /\.(avif|gif|jpe?g|png|svg|webp)(?:[?#].*)?\/?$/i;
+  return (
+    file?.type?.startsWith("image/") ||
+    [fileSource(file), file?.name, file?.key].filter(Boolean).some((value) => imageExtension.test(value))
+  );
+}
+
 function statusOf(item) {
   if (item.accountDisabled) return "معطل";
   return item.status || item.role || item.paymentStatus || "نشط";
@@ -179,11 +191,21 @@ function Field({ field, value, onChange, onFiles }) {
         <input id={name} type="file" multiple onChange={(event) => onFiles(name, event.target.files)} />
         {Array.isArray(value) && value.length ? (
           <div className="forma-admin-files">
-            {value.map((file) => (
-              <a href={file.url} target="_blank" rel="noreferrer" key={file.key || file.url}>
-                {file.name || file.key || file.url}
-              </a>
-            ))}
+            {value.map((file) => {
+              const source = fileSource(file);
+              const fileName = file?.name || source.split("/").filter(Boolean).pop() || label;
+
+              return isImageFile(file) ? (
+                <div className="forma-admin-file-preview" key={file?.key || source}>
+                  <img src={source} alt={fileName} />
+                  <span>{fileName}</span>
+                </div>
+              ) : (
+                <a href={source} target="_blank" rel="noreferrer" key={file?.key || source}>
+                  {fileName}
+                </a>
+              );
+            })}
           </div>
         ) : null}
       </div>
