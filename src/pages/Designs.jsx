@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import { Link, useSearchParams } from "react-router-dom";
 import LegacyPage from "../components/LegacyPage";
 import NewsletterSection from "../components/NewsletterSection";
+import PageTitle from "../components/PageTitle";
 import { useLanguage } from "../contexts/LanguageContext";
 import {
   designMatchesFilter,
@@ -143,11 +144,7 @@ export default function Designs() {
 
   return (
     <>
-      <section className="page-title jarallax">
-        <div className="container">
-          <h1>{language === "ar" ? "التصاميم" : "Designs"}</h1>
-        </div>
-      </section>
+      <PageTitle title={language === "ar" ? "التصاميم" : "Designs"} />
 
       <main className="page-content product-store Designs-page padding-large">
         <div className="container">

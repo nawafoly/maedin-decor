@@ -1,0 +1,103 @@
+[debug] [2026-06-21T12:37:20.647Z] ----------------------------------------------------------------------
+[debug] [2026-06-21T12:37:20.649Z] Command:       C:\Program Files\nodejs\node.exe C:\Users\nawaf\AppData\Roaming\npm\node_modules\firebase-tools\lib\bin\firebase.js login:add
+[debug] [2026-06-21T12:37:20.649Z] CLI Version:   15.19.0
+[debug] [2026-06-21T12:37:20.649Z] Platform:      win32
+[debug] [2026-06-21T12:37:20.649Z] Node Version:  v24.14.1
+[debug] [2026-06-21T12:37:20.650Z] Time:          Sun Jun 21 2026 15:37:20 GMT+0300 (التوقيت العربي الرسمي)
+[debug] [2026-06-21T12:37:20.650Z] ----------------------------------------------------------------------
+[debug] 
+[debug] [2026-06-21T12:37:20.652Z] >>> [apiv2][query] GET https://firebase-public.firebaseio.com/cli.json [none]
+[error] 
+[error] Error: Cannot run "login:add" in non-interactive mode.
+[debug] [2026-06-21T12:37:35.694Z] ----------------------------------------------------------------------
+[debug] [2026-06-21T12:37:35.696Z] Command:       C:\Program Files\nodejs\node.exe C:\Users\nawaf\AppData\Roaming\npm\node_modules\firebase-tools\lib\bin\firebase.js login:add
+[debug] [2026-06-21T12:37:35.696Z] CLI Version:   15.19.0
+[debug] [2026-06-21T12:37:35.696Z] Platform:      win32
+[debug] [2026-06-21T12:37:35.696Z] Node Version:  v24.14.1
+[debug] [2026-06-21T12:37:35.696Z] Time:          Sun Jun 21 2026 15:37:35 GMT+0300 (التوقيت العربي الرسمي)
+[debug] [2026-06-21T12:37:35.696Z] ----------------------------------------------------------------------
+[debug] 
+[debug] [2026-06-21T12:37:35.699Z] >>> [apiv2][query] GET https://firebase-public.firebaseio.com/cli.json [none]
+[info] 
+[info] Visit this URL on this device to log in:
+[info] https://accounts.google.com/o/oauth2/auth?client_id=563584335869-fgrhgmd47bqnekij5i8b5pr03ho849e6.apps.googleusercontent.com&scope=email%20openid%20https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fcloudplatformprojects.readonly%20https%3A%2F%2Fwww.googleapis.com%2Fauth%2Ffirebase%20https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fcloud-platform&response_type=code&state=690513537&redirect_uri=http%3A%2F%2Flocalhost%3A9005
+[info] 
+[info] Waiting for authentication...
+[debug] [2026-06-21T12:37:36.303Z] <<< [apiv2][status] GET https://firebase-public.firebaseio.com/cli.json 200
+[debug] [2026-06-21T12:37:36.304Z] <<< [apiv2][body] GET https://firebase-public.firebaseio.com/cli.json {"cloudBuildErrorAfter":1594252800000,"cloudBuildWarnAfter":1590019200000,"defaultNode10After":1594252800000,"minVersion":"3.0.5","node8DeploysDisabledAfter":1613390400000,"node8RuntimeDisabledAfter":1615809600000,"node8WarnAfter":1600128000000}
+[debug] [2026-06-21T12:37:47.851Z] >>> [apiv2][query] POST https://accounts.google.com/o/oauth2/token [none]
+[debug] [2026-06-21T12:37:47.851Z] >>> [apiv2][body] POST https://accounts.google.com/o/oauth2/token [omitted]
+[debug] [2026-06-21T12:37:48.185Z] <<< [apiv2][status] POST https://accounts.google.com/o/oauth2/token 200
+[debug] [2026-06-21T12:38:26.607Z] ----------------------------------------------------------------------
+[debug] [2026-06-21T12:38:26.609Z] Command:       C:\Program Files\nodejs\node.exe C:\Users\nawaf\AppData\Roaming\npm\node_modules\firebase-tools\lib\bin\firebase.js deploy --only firestore:rules --project maedin-decor --non-interactive
+[debug] [2026-06-21T12:38:26.610Z] CLI Version:   15.19.0
+[debug] [2026-06-21T12:38:26.610Z] Platform:      win32
+[debug] [2026-06-21T12:38:26.610Z] Node Version:  v24.14.1
+[debug] [2026-06-21T12:38:26.610Z] Time:          Sun Jun 21 2026 15:38:26 GMT+0300 (التوقيت العربي الرسمي)
+[debug] [2026-06-21T12:38:26.610Z] ----------------------------------------------------------------------
+[debug] 
+[debug] [2026-06-21T12:38:30.425Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2026-06-21T12:38:30.425Z] > authorizing via signed-in user (nawafoly0@gmail.com)
+[debug] [2026-06-21T12:38:30.426Z] [iam] checking project maedin-decor for permissions ["datastore.indexes.create","datastore.indexes.delete","datastore.indexes.list","datastore.indexes.update","firebase.projects.get"]
+[debug] [2026-06-21T12:38:30.427Z] No OAuth tokens found
+[debug] [2026-06-21T12:38:30.429Z] No OAuth tokens found
+[debug] [2026-06-21T12:38:30.429Z] > refreshing access token with scopes: []
+[debug] [2026-06-21T12:38:30.430Z] >>> [apiv2][query] POST https://www.googleapis.com/oauth2/v3/token [none]
+[debug] [2026-06-21T12:38:30.430Z] >>> [apiv2][body] POST https://www.googleapis.com/oauth2/v3/token [omitted]
+[debug] [2026-06-21T12:38:30.750Z] <<< [apiv2][status] POST https://www.googleapis.com/oauth2/v3/token 200
+[debug] [2026-06-21T12:38:30.750Z] <<< [apiv2][body] POST https://www.googleapis.com/oauth2/v3/token [omitted]
+[debug] [2026-06-21T12:38:30.758Z] >>> [apiv2][query] POST https://cloudresourcemanager.googleapis.com/v1/projects/maedin-decor:testIamPermissions [none]
+[debug] [2026-06-21T12:38:30.758Z] >>> [apiv2][(partial)header] POST https://cloudresourcemanager.googleapis.com/v1/projects/maedin-decor:testIamPermissions  x-goog-user-project=maedin-decor
+[debug] [2026-06-21T12:38:30.758Z] >>> [apiv2][body] POST https://cloudresourcemanager.googleapis.com/v1/projects/maedin-decor:testIamPermissions {"permissions":["datastore.indexes.create","datastore.indexes.delete","datastore.indexes.list","datastore.indexes.update","firebase.projects.get"]}
+[debug] [2026-06-21T12:38:31.309Z] <<< [apiv2][status] POST https://cloudresourcemanager.googleapis.com/v1/projects/maedin-decor:testIamPermissions 200
+[debug] [2026-06-21T12:38:31.309Z] <<< [apiv2][body] POST https://cloudresourcemanager.googleapis.com/v1/projects/maedin-decor:testIamPermissions {"permissions":["datastore.indexes.create","datastore.indexes.delete","datastore.indexes.list","datastore.indexes.update","firebase.projects.get"]}
+[info] 
+[info] === Deploying to 'maedin-decor'...
+[info] 
+[info] i  deploying firestore 
+[info] i  firestore: ensuring required API firestore.googleapis.com is enabled... 
+[debug] [2026-06-21T12:38:31.317Z] Checked if tokens are valid: true, expires at: 1782049109750
+[debug] [2026-06-21T12:38:31.317Z] Checked if tokens are valid: true, expires at: 1782049109750
+[debug] [2026-06-21T12:38:31.317Z] >>> [apiv2][query] GET https://serviceusage.googleapis.com/v1/projects/maedin-decor/services/firestore.googleapis.com [none]
+[debug] [2026-06-21T12:38:31.317Z] >>> [apiv2][(partial)header] GET https://serviceusage.googleapis.com/v1/projects/maedin-decor/services/firestore.googleapis.com  x-goog-user-project=maedin-decor
+[debug] [2026-06-21T12:38:32.513Z] <<< [apiv2][status] GET https://serviceusage.googleapis.com/v1/projects/maedin-decor/services/firestore.googleapis.com 200
+[debug] [2026-06-21T12:38:32.513Z] <<< [apiv2][body] GET https://serviceusage.googleapis.com/v1/projects/maedin-decor/services/firestore.googleapis.com [omitted]
+[info] +  firestore: required API firestore.googleapis.com is enabled 
+[info] i  firestore: ensuring required API firestore.googleapis.com is enabled... 
+[debug] [2026-06-21T12:38:32.519Z] Checked if tokens are valid: true, expires at: 1782049109750
+[debug] [2026-06-21T12:38:32.519Z] Checked if tokens are valid: true, expires at: 1782049109750
+[debug] [2026-06-21T12:38:32.519Z] >>> [apiv2][query] GET https://firestore.googleapis.com/v1/projects/maedin-decor/databases/(default) [none]
+[debug] [2026-06-21T12:38:33.420Z] <<< [apiv2][status] GET https://firestore.googleapis.com/v1/projects/maedin-decor/databases/(default) 200
+[debug] [2026-06-21T12:38:33.420Z] <<< [apiv2][body] GET https://firestore.googleapis.com/v1/projects/maedin-decor/databases/(default) {"name":"projects/maedin-decor/databases/(default)","uid":"3c5969ac-1736-4e2b-aa3d-28f6d869227b","createTime":"2026-05-31T09:08:11.989929Z","updateTime":"2026-05-31T09:08:11.989929Z","locationId":"eur3","type":"FIRESTORE_NATIVE","concurrencyMode":"PESSIMISTIC","versionRetentionPeriod":"3600s","earliestVersionTime":"2026-06-21T11:38:33.159680Z","appEngineIntegrationMode":"DISABLED","keyPrefix":"e","pointInTimeRecoveryEnablement":"POINT_IN_TIME_RECOVERY_DISABLED","deleteProtectionState":"DELETE_PROTECTION_DISABLED","databaseEdition":"STANDARD","freeTier":true,"realtimeUpdatesMode":"REALTIME_UPDATES_MODE_ENABLED","etag":"IOijpO6smJUDMPndiNqW45QD"}
+[info] i  cloud.firestore: checking firestore.rules for compilation errors... 
+[debug] [2026-06-21T12:38:33.422Z] Checked if tokens are valid: true, expires at: 1782049109750
+[debug] [2026-06-21T12:38:33.422Z] Checked if tokens are valid: true, expires at: 1782049109750
+[debug] [2026-06-21T12:38:33.422Z] >>> [apiv2][query] POST https://firebaserules.googleapis.com/v1/projects/maedin-decor:test [none]
+[debug] [2026-06-21T12:38:33.422Z] >>> [apiv2][body] POST https://firebaserules.googleapis.com/v1/projects/maedin-decor:test [omitted]
+[debug] [2026-06-21T12:38:34.476Z] <<< [apiv2][status] POST https://firebaserules.googleapis.com/v1/projects/maedin-decor:test 200
+[debug] [2026-06-21T12:38:34.476Z] <<< [apiv2][body] POST https://firebaserules.googleapis.com/v1/projects/maedin-decor:test {}
+[info] +  cloud.firestore: rules file firestore.rules compiled successfully 
+[debug] [2026-06-21T12:38:34.477Z] Checked if tokens are valid: true, expires at: 1782049109750
+[debug] [2026-06-21T12:38:34.477Z] Checked if tokens are valid: true, expires at: 1782049109750
+[debug] [2026-06-21T12:38:34.477Z] >>> [apiv2][query] GET https://firebaserules.googleapis.com/v1/projects/maedin-decor/releases pageSize=10&pageToken=
+[debug] [2026-06-21T12:38:35.234Z] <<< [apiv2][status] GET https://firebaserules.googleapis.com/v1/projects/maedin-decor/releases 200
+[debug] [2026-06-21T12:38:35.234Z] <<< [apiv2][body] GET https://firebaserules.googleapis.com/v1/projects/maedin-decor/releases {"releases":[{"name":"projects/maedin-decor/releases/cloud.firestore","rulesetName":"projects/maedin-decor/rulesets/4e188e54-25be-4358-93bf-1a0fee5669a4","createTime":"2026-05-31T09:08:14.849356Z","updateTime":"2026-05-31T09:10:35.954726Z"}]}
+[debug] [2026-06-21T12:38:35.235Z] Checked if tokens are valid: true, expires at: 1782049109750
+[debug] [2026-06-21T12:38:35.235Z] Checked if tokens are valid: true, expires at: 1782049109750
+[debug] [2026-06-21T12:38:35.235Z] >>> [apiv2][query] GET https://firebaserules.googleapis.com/v1/projects/maedin-decor/rulesets/4e188e54-25be-4358-93bf-1a0fee5669a4 [none]
+[debug] [2026-06-21T12:38:35.600Z] <<< [apiv2][status] GET https://firebaserules.googleapis.com/v1/projects/maedin-decor/rulesets/4e188e54-25be-4358-93bf-1a0fee5669a4 200
+[debug] [2026-06-21T12:38:35.601Z] <<< [apiv2][body] GET https://firebaserules.googleapis.com/v1/projects/maedin-decor/rulesets/4e188e54-25be-4358-93bf-1a0fee5669a4 [omitted]
+[info] i  firestore: uploading rules firestore.rules... 
+[debug] [2026-06-21T12:38:35.602Z] Checked if tokens are valid: true, expires at: 1782049109750
+[debug] [2026-06-21T12:38:35.602Z] Checked if tokens are valid: true, expires at: 1782049109750
+[debug] [2026-06-21T12:38:35.602Z] >>> [apiv2][query] POST https://firebaserules.googleapis.com/v1/projects/maedin-decor/rulesets [none]
+[debug] [2026-06-21T12:38:35.602Z] >>> [apiv2][body] POST https://firebaserules.googleapis.com/v1/projects/maedin-decor/rulesets [omitted]
+[debug] [2026-06-21T12:38:36.516Z] <<< [apiv2][status] POST https://firebaserules.googleapis.com/v1/projects/maedin-decor/rulesets 200
+[debug] [2026-06-21T12:38:36.517Z] <<< [apiv2][body] POST https://firebaserules.googleapis.com/v1/projects/maedin-decor/rulesets {"name":"projects/maedin-decor/rulesets/e7b36317-b344-4f29-9312-53d79b3bbe57","source":{"files":[{"content":"rules_version = '2';\n\nservice cloud.firestore {\n  match /databases/{database}/documents {\n    function signedIn() {\n      return request.auth != null;\n    }\n\n    function ownerEmail() {\n      return signedIn() && request.auth.token.email == \"nawafoly0@gmail.com\";\n    }\n\n    function userPath() {\n      return /databases/$(database)/documents/users/$(request.auth.uid);\n    }\n\n    function hasProfile() {\n      return signedIn() && exists(userPath());\n    }\n\n    function userRole() {\n      return hasProfile() ? get(userPath()).data.role : \"\";\n    }\n\n    function isAdmin() {\n      return ownerEmail() || userRole() in [\"admin\", \"owner\"];\n    }\n\n    function isOwner() {\n      return ownerEmail() || userRole() == \"owner\";\n    }\n\n    function ownsUserField() {\n      return signedIn() && request.resource.data.userId == request.auth.uid;\n    }\n\n    match /users/{uid} {\n      allow create: if signedIn()\n        && request.auth.uid == uid\n        && (\n          request.resource.data.role == \"customer\"\n          || (ownerEmail() && request.resource.data.role in [\"admin\", \"owner\"])\n        );\n      allow read: if isAdmin() || (signedIn() && request.auth.uid == uid);\n      allow update: if isAdmin()\n        || (\n          signedIn()\n          && request.auth.uid == uid\n          && request.resource.data.role == resource.data.role\n          && request.resource.data.accountDisabled == resource.data.accountDisabled\n        );\n      allow delete: if isOwner();\n    }\n\n    match /orders/{orderId} {\n      allow create: if isAdmin() || ownsUserField();\n      allow read: if isAdmin() || (signedIn() && resource.data.userId == request.auth.uid);\n      allow update, delete: if isAdmin();\n    }\n\n    match /invoices/{invoiceId} {\n      allow read: if isAdmin() || (signedIn() && resource.data.customerId == request.auth.uid);\n      allow create, update, delete: if isAdmin();\n    }\n\n    match /paymentTransactions/{transactionId} {\n      allow read: if isAdmin() || (signedIn() && resource.data.userId == request.auth.uid);\n      allow create, update, delete: if false;\n    }\n\n    match /uploadsMetadata/{uploadId} {\n      allow create: if ownsUserField();\n      allow read: if isAdmin() || (signedIn() && resource.data.userId == request.auth.uid);\n      allow update, delete: if isAdmin();\n    }\n\n    match /{collectionName}/{documentId} {\n      allow read: if collectionName in [\"projects\", \"designs\", \"services\", \"packages\", \"siteSettings\"];\n      allow create, update, delete: if collectionName in [\"projects\", \"designs\", \"services\", \"packages\", \"siteSettings\"]\n        && isAdmin();\n    }\n  }\n}\n","name":"firestore.rules"}]},"createTime":"2026-06-21T12:38:36.188559Z","metadata":{"services":["cloud.firestore"]}}
+[debug] [2026-06-21T12:38:36.517Z] [rules] created ruleset projects/maedin-decor/rulesets/e7b36317-b344-4f29-9312-53d79b3bbe57
+[debug] [2026-06-21T12:38:36.517Z] [rules] releasing cloud.firestore with ruleset projects/maedin-decor/rulesets/e7b36317-b344-4f29-9312-53d79b3bbe57
+[debug] [2026-06-21T12:38:36.517Z] Checked if tokens are valid: true, expires at: 1782049109750
+[debug] [2026-06-21T12:38:36.518Z] Checked if tokens are valid: true, expires at: 1782049109750
+[debug] [2026-06-21T12:38:36.518Z] >>> [apiv2][query] PATCH https://firebaserules.googleapis.com/v1/projects/maedin-decor/releases/cloud.firestore [none]
+[debug] [2026-06-21T12:38:36.518Z] >>> [apiv2][body] PATCH https://firebaserules.googleapis.com/v1/projects/maedin-decor/releases/cloud.firestore {"release":{"name":"projects/maedin-decor/releases/cloud.firestore","rulesetName":"projects/maedin-decor/rulesets/e7b36317-b344-4f29-9312-53d79b3bbe57"}}
+[debug] [2026-06-21T12:38:37.461Z] <<< [apiv2][status] PATCH https://firebaserules.googleapis.com/v1/projects/maedin-decor/releases/cloud.firestore 200

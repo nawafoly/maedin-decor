@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { useAuth } from "../contexts/AuthContext";
 import {
   adminSections,
+  ensureDefaultPackages,
   importExistingSiteData,
   invoiceStatuses,
   orderStatuses,
@@ -12,10 +13,11 @@ import {
   subscribeCollection,
 } from "../lib/firestoreAdmin";
 import { uploadFiles } from "../lib/uploads";
+import { fallbackPackages } from "../lib/publicPackages";
 
 const sectionMap = Object.fromEntries(adminSections.map((section) => [section.key, section]));
 const primarySections = ["projects", "designs", "services", "packages"];
-const operationsSections = ["orders", "users", "invoices", "uploadsMetadata"];
+const operationsSections = ["orders", "payments", "users", "invoices", "uploadsMetadata"];
 const contentSections = ["siteSettings", "settings"];
 
 const sectionIcons = {
@@ -24,6 +26,7 @@ const sectionIcons = {
   services: "خد",
   packages: "با",
   orders: "طل",
+  payments: "PAY",
   users: "عم",
   invoices: "فو",
   uploadsMetadata: "مل",
@@ -67,6 +70,7 @@ function primaryTitle(item) {
     item.nameAr ||
     item.displayName ||
     item.customerName ||
+    item.reference ||
     item.invoiceNumber ||
     item.key ||
     item.name ||
@@ -110,9 +114,9 @@ function statusOf(item) {
 }
 
 function statusTone(status) {
-  if (["منشور", "مدفوع", "مدفوعة", "مكتمل", "admin", "owner", "نشط"].includes(status)) return "good";
-  if (["جديد", "مرسلة", "بانتظار المراجعة", "بانتظار الدفع"].includes(status)) return "warn";
-  if (["مخفي", "ملغي", "ملغية", "غير مدفوعة", "معطل"].includes(status)) return "danger";
+  if (["منشور", "مدفوع", "مدفوعة", "مكتمل", "admin", "owner", "نشط", "paid"].includes(status)) return "good";
+  if (["جديد", "مرسلة", "بانتظار المراجعة", "بانتظار الدفع", "initiated", "pending"].includes(status)) return "warn";
+  if (["مخفي", "ملغي", "ملغية", "غير مدفوعة", "معطل", "expired", "creation_failed", "failed"].includes(status)) return "danger";
   return "neutral";
 }
 
@@ -129,7 +133,8 @@ function tableColumns(section) {
     designs: ["designType", "price"],
     services: ["price", "priceFrom"],
     packages: ["price", "bestFor"],
-    orders: ["serviceType", "city"],
+    orders: ["packageName", "city", "paymentStatus"],
+    payments: ["customerEmail", "amount", "currency", "paymentMethod", "providerInvoiceId"],
     users: ["email", "role"],
     invoices: ["customerEmail", "amount"],
     uploadsMetadata: ["scope", "type"],
@@ -273,10 +278,11 @@ function DashboardOverview({ data, onSeed, seedState }) {
   const users = data.users || [];
   const orders = data.orders || [];
   const invoices = data.invoices || [];
+  const payments = data.paymentTransactions || [];
   const uploads = data.uploadsMetadata || [];
-  const revenue = invoices
-    .filter((invoice) => ["مدفوعة", "مدفوع"].includes(invoice.status))
-    .reduce((sum, invoice) => sum + numericAmount(invoice.amount), 0);
+  const revenue = payments
+    .filter((payment) => payment.status === "paid")
+    .reduce((sum, payment) => sum + numericAmount(payment.amount), 0);
   const invoiceTotal = invoices.reduce((sum, invoice) => sum + numericAmount(invoice.amount), 0);
   const publicItems = ["projects", "designs", "services", "packages"].reduce(
     (sum, key) => sum + (data[key] || []).filter((item) => item.status === "منشور").length,
@@ -291,10 +297,11 @@ function DashboardOverview({ data, onSeed, seedState }) {
     ["مكتملة", orders.filter((item) => item.status === "مكتمل").length, "طلبات منتهية", "good"],
     ["إجمالي الفواتير", money(invoiceTotal), "قيمة كل الفواتير", "neutral"],
     ["الإيرادات", money(revenue), "فواتير مدفوعة", "good"],
+    ["عمليات الدفع", payments.length, `${payments.filter((item) => item.status === "paid").length} عملية ناجحة`, "good"],
     ["ملفات R2", uploads.length, "صور ومستندات", "neutral"],
   ];
 
-  const activities = [...orders, ...invoices, ...uploads]
+  const activities = [...orders, ...payments, ...invoices, ...uploads]
     .sort((a, b) => (b.updatedAt?.seconds || b.createdAt?.seconds || 0) - (a.updatedAt?.seconds || a.createdAt?.seconds || 0))
     .slice(0, 8);
 
@@ -636,7 +643,7 @@ function SectionPanel({ section, items, data, user, draft, onDraftUsed, onCreate
             {message ? <div className="forma-form-message">{message}</div> : null}
           </form>
         ) : (
-          <p className="forma-empty">هذا القسم للعرض فقط، ويتم تحديثه تلقائياً من عمليات الرفع إلى R2.</p>
+          <p className="forma-empty">هذا القسم للعرض والتدقيق فقط، ويتم تحديثه تلقائياً من النظام.</p>
         )}
       </aside>
 
@@ -652,6 +659,7 @@ export default function Admin() {
   const [quickSearch, setQuickSearch] = useState("");
   const [seedState, setSeedState] = useState({ loading: false, message: "" });
   const [draft, setDraft] = useState(null);
+  const [packageDefaultsChecked, setPackageDefaultsChecked] = useState(false);
 
   useEffect(() => {
     const uniqueCollections = [...new Set(adminSections.map((section) => section.collectionName))];
@@ -663,13 +671,29 @@ export default function Admin() {
     return () => unsubscribers.forEach((unsubscribe) => unsubscribe());
   }, []);
 
+  useEffect(() => {
+    if (packageDefaultsChecked || !Array.isArray(data.packages) || !user) return;
+    setPackageDefaultsChecked(true);
+    ensureDefaultPackages(user).catch((error) => {
+      console.error("Default package initialization error:", error);
+      setSeedState((current) => ({ ...current, message: error.message || "تعذر إنشاء الباقات الافتراضية." }));
+    });
+  }, [data.packages, packageDefaultsChecked, user]);
+
   const activeSection = sectionMap[active];
   const activeItems = useMemo(
-    () => (activeSection ? data[activeSection.collectionName] || [] : []),
+    () => {
+      if (!activeSection) return [];
+      const items = data[activeSection.collectionName] || [];
+      return activeSection.key === "packages" && !items.length ? fallbackPackages : items;
+    },
     [activeSection, data],
   );
   const sectionCounts = useMemo(
-    () => Object.fromEntries(adminSections.map((section) => [section.key, (data[section.collectionName] || []).length])),
+    () => Object.fromEntries(adminSections.map((section) => {
+      const count = (data[section.collectionName] || []).length;
+      return [section.key, section.key === "packages" && !count ? fallbackPackages.length : count];
+    })),
     [data],
   );
   const newOrders = (data.orders || []).filter((order) => order.status === "جديد").length;

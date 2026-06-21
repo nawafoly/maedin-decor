@@ -11,21 +11,61 @@
 }
 
 .page-title {
+  min-height: clamp(470px, 58vh, 640px);
+  position: relative;
+  overflow: hidden;
+  align-items: center;
   justify-content: center;
+  background:
+    linear-gradient(90deg, rgba(246, 241, 232, 0.92), rgba(246, 241, 232, 0.58), rgba(246, 241, 232, 0.92)),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.74), rgba(236, 228, 216, 0.62)),
+    url("https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&w=2200&q=82") center / cover no-repeat;
+  background-color: #eee5d8;
 }
 
 .page-title .container {
   width: 100%;
   max-width: none;
   margin-inline: auto;
-  padding-inline: 16px;
+  padding: clamp(92px, 12vw, 140px) 16px clamp(70px, 9vw, 110px);
   text-align: center;
 }
 
+.page-title-logo {
+  width: clamp(128px, 13vw, 210px);
+  margin: 0 auto clamp(18px, 2.4vw, 30px);
+}
+
 .page-title h1,
-.page-title p {
+.page-title p,
+.page-title span {
   width: 100%;
   text-align: center;
+}
+
+.page-title h1 {
+  max-width: 920px;
+  margin-inline: auto;
+  color: #171615;
+  font-size: clamp(3rem, 7vw, 7.4rem);
+  line-height: 0.95;
+  letter-spacing: -0.045em;
+  text-wrap: balance;
+}
+
+.page-title p {
+  display: none;
+}
+
+.page-title span {
+  display: block;
+  max-width: 680px;
+  margin: clamp(14px, 2vw, 22px) auto 0;
+  color: rgba(23, 22, 21, 0.66);
+  font-size: clamp(1rem, 1.5vw, 1.35rem);
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
 }
 
 #header-nav .language-switcher button.nav-link {
@@ -1916,4 +1956,627 @@ html[dir="rtl"] .admin-upload-list {
     display: grid;
     grid-template-columns: 1fr;
   }
+}
+.forma-account-page {
+  max-width: 1240px;
+  margin: 0 auto;
+  padding: 84px 28px 100px;
+}
+
+.forma-account-head {
+  display: flex;
+  justify-content: space-between;
+  gap: 30px;
+  align-items: end;
+  padding-bottom: 38px;
+  border-bottom: 1px solid rgba(20, 20, 20, 0.18);
+}
+
+.forma-account-head > div:first-child > span,
+.forma-account-panel__head span {
+  color: #a7783d;
+  font-size: 0.75rem;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+}
+
+.forma-account-head h1 {
+  margin: 10px 0;
+}
+
+.forma-account-head p {
+  margin: 0;
+  color: #68625d;
+}
+
+.forma-account-head > div:last-child {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.forma-account-stats {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 14px;
+  margin: 32px 0;
+}
+
+.forma-account-stats article {
+  padding: 22px;
+  border: 1px solid rgba(20, 20, 20, 0.14);
+  background: #fff;
+}
+
+.forma-account-stats span,
+.forma-account-stats strong {
+  display: block;
+}
+
+.forma-account-stats span {
+  color: #6b6660;
+  font-size: 0.82rem;
+}
+
+.forma-account-stats strong {
+  margin-top: 8px;
+  font-size: 2rem;
+}
+
+.forma-account-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.4fr) minmax(320px, 0.6fr);
+  gap: 22px;
+}
+
+.forma-account-panel {
+  padding: 28px;
+  border: 1px solid rgba(20, 20, 20, 0.14);
+  background: #fff;
+}
+
+.forma-account-panel__head {
+  margin-bottom: 24px;
+}
+
+.forma-account-panel__head h2 {
+  margin: 7px 0 0;
+}
+
+.forma-account-list,
+.forma-account-mini-list {
+  display: grid;
+  gap: 12px;
+}
+
+.forma-account-list > article {
+  display: flex;
+  justify-content: space-between;
+  gap: 24px;
+  padding: 20px;
+  border: 1px solid #e2dfda;
+}
+
+.forma-account-list h3 {
+  margin: 5px 0;
+  font-size: 1.25rem;
+}
+
+.forma-account-list p {
+  margin: 0;
+  color: #706a64;
+}
+
+.forma-account-order-meta {
+  display: grid;
+  gap: 5px;
+  justify-items: end;
+  text-align: left;
+}
+
+.forma-account-order-meta b {
+  color: #a7783d;
+}
+
+.forma-account-order-meta code {
+  max-width: 180px;
+  overflow: hidden;
+  color: #777;
+  text-overflow: ellipsis;
+}
+
+.forma-account-mini-list article {
+  display: flex;
+  justify-content: space-between;
+  gap: 18px;
+  padding: 16px 0;
+  border-bottom: 1px solid #ddd;
+}
+
+.forma-account-mini-list article div {
+  display: grid;
+  gap: 4px;
+}
+
+.forma-account-mini-list span,
+.forma-account-empty {
+  color: #716b65;
+}
+
+@media (max-width: 900px) {
+  .forma-account-head { display: grid; }
+  .forma-account-stats { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .forma-account-grid { grid-template-columns: 1fr; }
+}
+
+@media (max-width: 560px) {
+  .forma-account-page { padding: 58px 18px 70px; }
+  .forma-account-stats { grid-template-columns: 1fr; }
+  .forma-account-list > article { display: grid; }
+  .forma-account-order-meta { justify-items: start; text-align: right; }
+}
+
+.forma-request-page {
+  max-width: 1240px;
+  margin: 0 auto;
+  padding: 84px 28px 100px;
+  color: #171717;
+}
+
+.forma-request-hero {
+  display: grid;
+  grid-template-columns: minmax(0, 1.4fr) minmax(320px, 0.6fr);
+  gap: 70px;
+  align-items: end;
+  padding: 54px 0 64px;
+  border-bottom: 1px solid rgba(20, 20, 20, 0.18);
+}
+
+.forma-request-hero > div > span,
+.forma-request-section__head > span,
+.forma-request-review > span {
+  color: #a7783d;
+  font-size: 0.76rem;
+  font-weight: 800;
+  letter-spacing: 0.13em;
+}
+
+.forma-request-hero h1 {
+  max-width: 720px;
+  margin: 13px 0 18px;
+  font-size: clamp(2.7rem, 6vw, 5.6rem);
+  line-height: 0.98;
+}
+
+.forma-request-hero p {
+  max-width: 740px;
+  margin: 0;
+  color: #5f5b55;
+  font-size: 1.08rem;
+  line-height: 1.9;
+}
+
+.forma-request-hero ol {
+  display: grid;
+  gap: 12px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.forma-request-hero li {
+  display: grid;
+  grid-template-columns: 48px 1fr;
+  gap: 16px;
+  align-items: center;
+  padding: 13px 0;
+  border-bottom: 1px solid rgba(20, 20, 20, 0.12);
+}
+
+.forma-request-hero li b {
+  color: #a7783d;
+  font-size: 0.75rem;
+}
+
+.forma-request-hero li span {
+  font-weight: 700;
+}
+
+.forma-request-section,
+.forma-request-builder {
+  padding: 72px 0 20px;
+}
+
+.forma-request-section__head {
+  max-width: 720px;
+  margin-bottom: 34px;
+}
+
+.forma-request-section__head h2 {
+  margin: 9px 0 10px;
+  font-size: clamp(2rem, 4vw, 3.5rem);
+}
+
+.forma-request-section__head p {
+  color: #65605a;
+}
+
+.forma-request-packages {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 18px;
+}
+
+.forma-request-package {
+  position: relative;
+  display: flex;
+  min-height: 510px;
+  padding: 28px;
+  flex-direction: column;
+  text-align: right;
+  color: #191919;
+  border: 1px solid rgba(20, 20, 20, 0.18);
+  background: #fff;
+  transition: transform 180ms ease, border-color 180ms ease, box-shadow 180ms ease;
+}
+
+.forma-request-package:hover,
+.forma-request-package.is-selected {
+  transform: translateY(-5px);
+  border-color: #a7783d;
+  box-shadow: 0 22px 52px rgba(41, 32, 22, 0.1);
+}
+
+.forma-request-package.is-selected::after {
+  content: "مختارة";
+  position: absolute;
+  top: 22px;
+  left: 22px;
+  padding: 6px 11px;
+  color: #fff;
+  background: #171717;
+  font-size: 0.7rem;
+  font-weight: 800;
+}
+
+.forma-request-package__number {
+  color: #b7ada1;
+  font-size: 2.4rem;
+  font-weight: 300;
+}
+
+.forma-request-package > small {
+  margin: 25px 0 8px;
+  color: #a7783d;
+  font-weight: 800;
+}
+
+.forma-request-package h3 {
+  margin-bottom: 14px;
+  font-size: 1.75rem;
+}
+
+.forma-request-package p {
+  color: #66615c;
+  line-height: 1.75;
+}
+
+.forma-request-package ul {
+  display: grid;
+  gap: 8px;
+  margin: 8px 0 28px;
+  padding: 0;
+  list-style: none;
+}
+
+.forma-request-package li::before {
+  content: "✓";
+  margin-left: 8px;
+  color: #a7783d;
+}
+
+.forma-request-package > div {
+  display: flex;
+  justify-content: space-between;
+  gap: 14px;
+  align-items: end;
+  margin-top: auto;
+  padding-top: 20px;
+  border-top: 1px solid #ddd;
+}
+
+.forma-request-package strong {
+  font-size: 1.2rem;
+}
+
+.forma-request-package em {
+  color: #716b65;
+  font-size: 0.78rem;
+  font-style: normal;
+}
+
+.forma-request-builder {
+  margin-top: 52px;
+  border-top: 1px solid rgba(20, 20, 20, 0.18);
+}
+
+.forma-request-form {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 360px;
+  gap: 34px;
+  align-items: start;
+}
+
+.forma-request-form__fields {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 24px 28px;
+  padding: 32px;
+  border: 1px solid rgba(20, 20, 20, 0.16);
+  background: #fff;
+}
+
+.forma-request-form label {
+  display: block;
+}
+
+.forma-request-form label.is-wide {
+  grid-column: 1 / -1;
+}
+
+.forma-request-form label > span {
+  display: block;
+  margin-bottom: 9px;
+  font-size: 0.86rem;
+  font-weight: 800;
+}
+
+.forma-request-form input,
+.forma-request-form select,
+.forma-request-form textarea {
+  width: 100%;
+  padding: 12px 2px;
+  border: 0;
+  border-bottom: 1px solid #aaa;
+  border-radius: 0;
+  background: transparent;
+}
+
+.forma-request-form input:focus,
+.forma-request-form select:focus,
+.forma-request-form textarea:focus {
+  outline: 0;
+  border-color: #a7783d;
+}
+
+.forma-request-upload {
+  padding: 18px;
+  border: 1px dashed #aaa;
+  background: #f8f6f2;
+}
+
+.forma-request-upload input {
+  border: 0;
+}
+
+.forma-request-upload small {
+  color: #6d6862;
+}
+
+.forma-request-review {
+  position: sticky;
+  top: 110px;
+  padding: 30px;
+  color: #f7f3eb;
+  background: #17191b;
+}
+
+.forma-request-review h3 {
+  margin: 12px 0 5px;
+  color: #fff;
+  font-size: 1.7rem;
+}
+
+.forma-request-review > p {
+  color: #d8bd99;
+  font-size: 1.1rem;
+}
+
+.forma-request-review dl {
+  margin: 28px 0;
+}
+
+.forma-request-review dl div {
+  display: flex;
+  justify-content: space-between;
+  gap: 18px;
+  padding: 13px 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.13);
+}
+
+.forma-request-review dd {
+  margin: 0;
+  color: #fff;
+  font-weight: 700;
+}
+
+.forma-request-review .btn {
+  width: 100%;
+  color: #17191b;
+  background: #fff;
+}
+
+.forma-request-review > small {
+  display: block;
+  margin-top: 16px;
+  color: #aaa;
+  line-height: 1.65;
+}
+
+.forma-request-message {
+  margin-top: 18px;
+  padding: 12px;
+  color: #17191b;
+  background: #e8ddcd;
+  line-height: 1.6;
+}
+
+.forma-request-login {
+  padding: 42px;
+  border: 1px solid rgba(20, 20, 20, 0.16);
+  background: #fff;
+}
+
+.forma-request-login > div {
+  display: flex;
+  gap: 12px;
+  margin-top: 24px;
+}
+
+@media (max-width: 980px) {
+  .forma-request-hero,
+  .forma-request-form { grid-template-columns: 1fr; }
+  .forma-request-packages { grid-template-columns: 1fr; }
+  .forma-request-package { min-height: auto; }
+  .forma-request-review { position: static; }
+}
+
+@media (max-width: 640px) {
+  .forma-request-page { padding: 58px 18px 70px; }
+  .forma-request-hero { gap: 30px; padding-top: 28px; }
+  .forma-request-form__fields { grid-template-columns: 1fr; padding: 22px; }
+  .forma-request-form label.is-wide { grid-column: auto; }
+  .forma-request-login { padding: 26px; }
+  .forma-request-login > div { flex-direction: column; }
+}
+
+.forma-checkout-page {
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: 84px 24px 90px;
+}
+
+.forma-checkout-heading {
+  max-width: 720px;
+  margin-bottom: 42px;
+}
+
+.forma-checkout-heading > span,
+.forma-payment-summary > span,
+.forma-payment-result > span {
+  color: #9c7650;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+}
+
+.forma-checkout-heading h1,
+.forma-payment-result h1 {
+  margin: 10px 0 14px;
+}
+
+.forma-checkout-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.35fr) minmax(300px, 0.65fr);
+  gap: 30px;
+  align-items: start;
+}
+
+.forma-checkout-form,
+.forma-payment-summary,
+.forma-payment-result {
+  padding: 32px;
+  border: 1px solid rgba(20, 20, 20, 0.16);
+  background: #fff;
+}
+
+.forma-checkout-form {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 22px;
+}
+
+.forma-checkout-form > div,
+.forma-checkout-form > button,
+.forma-checkout-form > p {
+  grid-column: 1 / -1;
+}
+
+.forma-checkout-form > div:nth-child(-n + 2) {
+  grid-column: auto;
+}
+
+.forma-checkout-form label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: 700;
+}
+
+.forma-checkout-form input,
+.forma-checkout-form textarea {
+  width: 100%;
+  padding: 12px 0;
+  border: 0;
+  border-bottom: 1px solid #aaa;
+  background: transparent;
+}
+
+.forma-checkout-form input:disabled {
+  color: #555;
+}
+
+.forma-payment-summary h2 {
+  margin: 12px 0;
+}
+
+.forma-payment-summary dl {
+  margin: 28px 0;
+  border-top: 1px solid #ddd;
+}
+
+.forma-payment-summary dl div {
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+  padding: 15px 0;
+  border-bottom: 1px solid #ddd;
+}
+
+.forma-payment-summary dd {
+  margin: 0;
+  font-weight: 700;
+}
+
+.forma-payment-summary small {
+  display: block;
+  color: #666;
+  line-height: 1.7;
+}
+
+.forma-payment-error {
+  color: #a72b2b;
+  margin: 0;
+}
+
+.forma-payment-result {
+  max-width: 720px;
+  margin: 40px auto;
+  text-align: center;
+}
+
+.forma-payment-result strong,
+.forma-payment-result a {
+  display: block;
+  margin-top: 22px;
+}
+
+.forma-payment-result.is-success {
+  border-color: #668266;
+}
+
+@media (max-width: 800px) {
+  .forma-checkout-page { padding-top: 58px; }
+  .forma-checkout-grid { grid-template-columns: 1fr; }
+  .forma-checkout-form { grid-template-columns: 1fr; padding: 22px; }
+  .forma-checkout-form > div:nth-child(-n + 2) { grid-column: 1 / -1; }
 }

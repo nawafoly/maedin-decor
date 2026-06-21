@@ -40,7 +40,7 @@ const router = createBrowserRouter([
       { path: "blog.html", element: <Projects /> },
       { path: "single-post.html", element: <ProjectStory /> },
       { path: "cart.html", element: <Request /> },
-      { path: "checkout.html", element: <Checkout /> },
+      { path: "checkout.html", element: <CustomerProtectedRoute><Checkout /></CustomerProtectedRoute> },
       { path: "login.html", element: <Login /> },
       { path: "register.html", element: <Register /> },
       { path: "account.html", element: <CustomerProtectedRoute><Account /></CustomerProtectedRoute> },

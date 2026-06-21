@@ -63,6 +63,11 @@ service cloud.firestore {
       allow create, update, delete: if isAdmin();
     }
 
+    match /paymentTransactions/{transactionId} {
+      allow read: if isAdmin() || (signedIn() && resource.data.userId == request.auth.uid);
+      allow create, update, delete: if false;
+    }
+
     match /uploadsMetadata/{uploadId} {
       allow create: if ownsUserField();
       allow read: if isAdmin() || (signedIn() && resource.data.userId == request.auth.uid);

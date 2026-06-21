@@ -1,5 +1,6 @@
 import { useState } from "react";
-import { Link, Navigate, useNavigate } from "react-router-dom";
+import { Link, Navigate, useLocation, useNavigate } from "react-router-dom";
+import PageTitle from "../components/PageTitle";
 import { useAuth } from "../contexts/AuthContext";
 
 function messageFromError(error) {
@@ -15,6 +16,7 @@ export default function Login() {
   const [error, setError] = useState("");
   const [submitting, setSubmitting] = useState(false);
   const navigate = useNavigate();
+  const location = useLocation();
 
   if (!loading && user) {
     return <Navigate to={isAdmin ? "/admin.html" : "/account.html"} replace />;
@@ -29,7 +31,8 @@ export default function Login() {
       const result = await login(form.email, form.password);
       const role = result.profile?.role || result.role;
       const isAdminRole = role === "admin" || role === "owner";
-      const destination = isAdminRole ? "/admin.html" : "/account.html";
+      const requestedPath = location.state?.from?.pathname;
+      const destination = isAdminRole ? "/admin.html" : requestedPath || "/account.html";
       navigate(destination, { replace: true });
     } catch (nextError) {
       if (import.meta.env.DEV) {
@@ -43,12 +46,7 @@ export default function Login() {
 
   return (
     <>
-      <section className="page-title jarallax">
-        <div className="container">
-          <h1>تسجيل الدخول</h1>
-          <p>الرئيسية &gt; تسجيل الدخول</p>
-        </div>
-      </section>
+      <PageTitle title="تسجيل الدخول" />
       <main className="page-content account-page padding-large">
         <div className="container narrow-container">
           <ul className="nav nav-tabs account-tabs justify-content-center" role="tablist">

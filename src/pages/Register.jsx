@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Link, Navigate, useNavigate } from "react-router-dom";
+import PageTitle from "../components/PageTitle";
 import { useAuth } from "../contexts/AuthContext";
 
 function messageFromError(error) {
@@ -37,12 +38,7 @@ export default function Register() {
 
   return (
     <>
-      <section className="page-title jarallax">
-        <div className="container">
-          <h1>إنشاء حساب</h1>
-          <p>الرئيسية &gt; حساب جديد</p>
-        </div>
-      </section>
+      <PageTitle title="إنشاء حساب" />
       <main className="page-content account-page padding-large">
         <div className="container narrow-container">
           <ul className="nav nav-tabs account-tabs justify-content-center" role="tablist">

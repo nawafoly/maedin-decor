@@ -3,6 +3,7 @@ import {
   collection,
   deleteDoc,
   doc,
+  getDocs,
   onSnapshot,
   serverTimestamp,
   setDoc,
@@ -22,6 +23,57 @@ export const orderStatuses = [
 ];
 
 export const invoiceStatuses = ["مسودة", "مرسلة", "مدفوعة", "غير مدفوعة", "ملغية"];
+
+const defaultPackageContent = {
+  consultation: {
+    nameAr: "استشارة التصميم",
+    descriptionAr: "جلسة مركزة لمراجعة المساحة والأهداف والميزانية واتجاه التصميم وتحديد الخطوة التالية.",
+    features: ["مراجعة موجز المشروع", "توجيه الأسلوب والميزانية", "توصية الخدمة المناسبة", "ملخص الخطوة التالية"],
+  },
+  concept: {
+    nameAr: "بكج التصور",
+    descriptionAr: "اتجاه بصري متكامل لمساحة محددة يشمل لوحة مزاجية وتخطيطاً أولياً وألواناً ومراجع مواد.",
+    features: ["لوحة مزاجية", "اتجاه تخطيط أولي", "لوحة ألوان", "مراجع مواد"],
+  },
+  full: {
+    nameAr: "ملف مشروع كامل",
+    descriptionAr: "ملف تصميم متكامل يشمل التخطيط والاتجاه البصري والمواد والإضاءة والأثاث ومراجع التنفيذ.",
+    features: ["تخطيط المساحة", "توجيه المواد والإضاءة", "مراجع الأثاث", "ملف التسليم"],
+  },
+};
+
+export async function ensureDefaultPackages(user) {
+  const existing = await getDocs(collection(db, "packages"));
+  if (!existing.empty) return 0;
+
+  await Promise.all(pricing.map((item, index) => {
+    const localized = defaultPackageContent[item.id] || {};
+    const priceAmount = Number(String(item.price).replace(/[^\d.]/g, "")) || 0;
+    return setDoc(doc(db, "packages", item.id), {
+      code: item.id,
+      nameAr: localized.nameAr || item.title,
+      nameEn: item.title,
+      descriptionAr: localized.descriptionAr || item.description,
+      descriptionEn: item.description,
+      price: item.price,
+      priceAmount,
+      duration: item.duration,
+      features: localized.features || item.includes,
+      featuresText: (localized.features || item.includes).join("\n"),
+      bestFor: item.id === "consultation" ? "استشارة" : item.id === "full" ? "مشروع كامل" : "غرفة",
+      purchaseMode: item.id === "consultation" ? "شراء مباشر" : "طلب عرض سعر",
+      requestEnabled: true,
+      requiresPayment: item.id === "consultation",
+      status: "منشور",
+      sortOrder: index + 1,
+      createdAt: serverTimestamp(),
+      createdBy: user?.uid || "",
+      updatedAt: serverTimestamp(),
+      updatedBy: user?.uid || "",
+    });
+  }));
+  return pricing.length;
+}
 
 export const adminSections = [
   {
@@ -82,12 +134,20 @@ export const adminSections = [
     title: "الباقات",
     description: "إدارة الباقات والمميزات والفئة المناسبة وطريقة الطلب.",
     fields: [
+      ["code", "رمز الباقة", "text"],
       ["nameAr", "اسم الباقة", "text"],
+      ["nameEn", "اسم الباقة بالإنجليزية", "text"],
+      ["descriptionAr", "وصف الباقة", "textarea"],
+      ["descriptionEn", "الوصف بالإنجليزية", "textarea"],
       ["price", "السعر", "text"],
+      ["priceAmount", "قيمة الدفع بالريال", "number"],
       ["discount", "الخصم", "text"],
+      ["duration", "مدة التنفيذ", "text"],
       ["featuresText", "المميزات - كل ميزة في سطر", "textarea"],
       ["bestFor", "مناسبة لـ", "select", ["غرفة", "فيلا", "متجر", "استشارة", "مشروع كامل"]],
       ["purchaseMode", "طريقة الطلب", "select", ["شراء مباشر", "طلب عرض سعر"]],
+      ["requestEnabled", "متاحة في صفحة الطلب", "checkbox"],
+      ["requiresPayment", "دفع مباشر بعد الطلب", "checkbox"],
       ["sortOrder", "ترتيب الظهور", "number"],
       ["status", "حالة النشر", "select", ["منشور", "مخفي"]],
     ],
@@ -100,17 +160,43 @@ export const adminSections = [
     fields: [
       ["customerName", "العميل", "text"],
       ["customerEmail", "البريد", "email"],
-      ["orderType", "نوع الطلب", "select", ["طلب عرض سعر", "شراء مباشر"]],
+      ["contactPhone", "رقم التواصل", "text"],
+      ["packageId", "معرف الباقة", "text"],
+      ["packageName", "الباقة المطلوبة", "text"],
+      ["packagePrice", "سعر الباقة", "text"],
+      ["orderType", "نوع الطلب", "select", ["شراء خدمة", "طلب خدمة ومراجعة نطاق", "طلب عرض سعر"]],
       ["serviceType", "نوع الخدمة", "text"],
       ["projectType", "نوع المشروع", "text"],
       ["city", "المدينة", "text"],
       ["budget", "الميزانية", "text"],
       ["area", "المساحة التقريبية", "text"],
-      ["paymentMethod", "طريقة الدفع", "select", ["أونلاين", "كاش في المكتب", "تحويل لاحق"]],
+      ["preferredStart", "موعد البدء المناسب", "date"],
+      ["paymentMethod", "طريقة الدفع", "select", ["أونلاين", "بعد مراجعة النطاق", "تحويل لاحق"]],
+      ["paymentStatus", "حالة الدفع", "text"],
+      ["paymentTransactionId", "مرجع عملية الدفع", "text"],
       ["status", "الحالة", "select", orderStatuses],
       ["notes", "ملاحظات العميل", "textarea"],
       ["adminNotes", "ملاحظات داخلية للأدمن", "textarea"],
       ["attachments", "مرفقات إضافية", "files"],
+    ],
+  },
+  {
+    key: "payments",
+    collectionName: "paymentTransactions",
+    title: "المدفوعات",
+    description: "سجل تدقيق تلقائي لكل محاولات الدفع وحالتها ومرجع بوابة الدفع وبيانات العميل.",
+    readOnly: true,
+    fields: [
+      ["reference", "المرجع الداخلي", "text"],
+      ["customerName", "العميل", "text"],
+      ["customerEmail", "البريد", "email"],
+      ["amount", "المبلغ", "number"],
+      ["currency", "العملة", "text"],
+      ["status", "الحالة", "text"],
+      ["paymentMethod", "طريقة الدفع", "text"],
+      ["providerInvoiceId", "مرجع Moyasar", "text"],
+      ["createdAt", "وقت الإنشاء", "text"],
+      ["paidAt", "وقت الدفع", "text"],
     ],
   },
   {
@@ -215,6 +301,11 @@ export async function saveAdminDocument(section, payload, editingId, user) {
 
   if (collectionName === "invoices" && !nextPayload.invoiceNumber) {
     nextPayload.invoiceNumber = `INV-${Date.now()}`;
+  }
+
+  if (editingId && collectionName === "packages") {
+    await setDoc(doc(db, collectionName, editingId), nextPayload, { merge: true });
+    return editingId;
   }
 
   if (editingId) {
@@ -327,15 +418,21 @@ export async function importExistingSiteData(user) {
   pricing.forEach((item, index) => {
     writes.push(
       seedDoc("packages", item.id, {
+        code: item.id,
         nameAr: item.title,
+        nameEn: item.title,
         label: item.label,
         price: item.price,
+        priceAmount: Number(String(item.price).replace(/[^\d.]/g, "")) || 0,
         features: item.includes || [],
         featuresText: (item.includes || []).join("\n"),
         bestFor: "استشارة",
         purchaseMode: "طلب عرض سعر",
         descriptionAr: item.description,
+        descriptionEn: item.description,
         duration: item.duration,
+        requestEnabled: true,
+        requiresPayment: item.id === "consultation",
         status: "منشور",
         sortOrder: index + 1,
         createdAt: serverTimestamp(),

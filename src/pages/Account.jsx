@@ -1,210 +1,107 @@
 import { useEffect, useMemo, useState } from "react";
-import { addDoc, collection, onSnapshot, query, serverTimestamp, where } from "firebase/firestore";
+import { collection, onSnapshot, query, where } from "firebase/firestore";
 import { Link } from "react-router-dom";
+import PageTitle from "../components/PageTitle";
 import { useAuth } from "../contexts/AuthContext";
 import { db } from "../lib/firebase";
-import { uploadFiles } from "../lib/uploads";
 
-const blankOrder = {
-  orderType: "طلب عرض سعر",
-  serviceType: "",
-  projectType: "",
-  city: "",
-  budget: "",
-  area: "",
-  paymentMethod: "تحويل لاحق",
-  notes: "",
-};
+function timestamp(value) {
+  const date = value?.toDate?.() || (value?.seconds ? new Date(value.seconds * 1000) : null);
+  return date ? new Intl.DateTimeFormat("ar-SA", { dateStyle: "medium", timeStyle: "short" }).format(date) : "-";
+}
 
 export default function Account() {
   const { user, profile, logout, isAdmin } = useAuth();
   const [orders, setOrders] = useState([]);
   const [invoices, setInvoices] = useState([]);
-  const [form, setForm] = useState(blankOrder);
-  const [files, setFiles] = useState([]);
-  const [message, setMessage] = useState("");
-  const [submitting, setSubmitting] = useState(false);
+  const [payments, setPayments] = useState([]);
 
   useEffect(() => {
     if (!user?.uid) return undefined;
-    const ordersQuery = query(collection(db, "orders"), where("userId", "==", user.uid));
-    const invoicesQuery = query(collection(db, "invoices"), where("customerId", "==", user.uid));
-    const unsubscribeOrders = onSnapshot(ordersQuery, (snapshot) => {
-      setOrders(snapshot.docs.map((item) => ({ id: item.id, ...item.data() })));
-    });
-    const unsubscribeInvoices = onSnapshot(invoicesQuery, (snapshot) => {
-      setInvoices(snapshot.docs.map((item) => ({ id: item.id, ...item.data() })));
-    });
-
-    return () => {
-      unsubscribeOrders();
-      unsubscribeInvoices();
-    };
+    const subscriptions = [
+      onSnapshot(query(collection(db, "orders"), where("userId", "==", user.uid)), (snapshot) => {
+        setOrders(snapshot.docs.map((item) => ({ id: item.id, ...item.data() })));
+      }),
+      onSnapshot(query(collection(db, "invoices"), where("customerId", "==", user.uid)), (snapshot) => {
+        setInvoices(snapshot.docs.map((item) => ({ id: item.id, ...item.data() })));
+      }),
+      onSnapshot(query(collection(db, "paymentTransactions"), where("userId", "==", user.uid)), (snapshot) => {
+        setPayments(snapshot.docs.map((item) => ({ id: item.id, ...item.data() })));
+      }),
+    ];
+    return () => subscriptions.forEach((unsubscribe) => unsubscribe());
   }, [user?.uid]);
 
-  const stats = useMemo(
-    () => [
-      ["طلباتي", orders.length],
-      ["الفواتير", invoices.length],
-      ["قيد التنفيذ", orders.filter((order) => order.status === "قيد التنفيذ").length],
-    ],
-    [invoices, orders],
+  const sortedOrders = useMemo(
+    () => [...orders].sort((a, b) => (b.createdAt?.seconds || 0) - (a.createdAt?.seconds || 0)),
+    [orders],
   );
-
-  async function handleSubmit(event) {
-    event.preventDefault();
-    setMessage("");
-    setSubmitting(true);
-
-    try {
-      const attachments = await uploadFiles(files, { folder: `customers/${user.uid}/orders`, scope: "customer" });
-      await addDoc(collection(db, "orders"), {
-        ...form,
-        attachments,
-        userId: user.uid,
-        customerName: profile?.displayName || user.displayName || "",
-        customerEmail: user.email,
-        status: "جديد",
-        updates: [{ label: "تم إنشاء الطلب", at: new Date().toISOString() }],
-        createdAt: serverTimestamp(),
-        updatedAt: serverTimestamp(),
-      });
-      setForm(blankOrder);
-      setFiles([]);
-      setMessage("تم إرسال الطلب بنجاح.");
-    } catch (error) {
-      setMessage(error.message || "تعذر إرسال الطلب.");
-    } finally {
-      setSubmitting(false);
-    }
-  }
 
   return (
     <>
-      <section className="page-title jarallax">
-        <div className="container">
-          <h1>حساب العميل</h1>
-          <p>الرئيسية &gt; حساب العميل</p>
+      <PageTitle title="حسابي" subtitle="FORMA Account" />
+      <main className="forma-account-page" dir="rtl">
+      <section className="forma-account-head">
+        <div>
+          <span>FORMA Account</span>
+          <h1>مرحباً، {profile?.displayName || user?.email}</h1>
+          <p>تابع طلبات الخدمات والمدفوعات والفواتير من مكان واحد.</p>
+        </div>
+        <div>
+          <Link className="btn btn-dark" to="/cart.html">طلب خدمة جديدة</Link>
+          {isAdmin ? <Link className="btn" to="/admin.html">لوحة الإدارة</Link> : null}
+          <button className="btn" type="button" onClick={logout}>تسجيل الخروج</button>
         </div>
       </section>
-      <main className="admin-shell">
-        <div className="container">
-          <div className="admin-toolbar">
-            <div>
-              <span className="title-accent fs-6 text-uppercase">FORMA Account</span>
-              <h1>{profile?.displayName || user?.email}</h1>
-              <p className="admin-muted mb-0">تابع طلباتك وفواتيرك وارفع بيانات مشروعك.</p>
-            </div>
-            <div className="d-flex flex-wrap gap-2">
-              {isAdmin ? <Link className="btn" to="/admin.html">لوحة الإدارة</Link> : null}
-              <button className="btn btn-dark" type="button" onClick={logout}>تسجيل الخروج</button>
-            </div>
-          </div>
 
-          <div className="admin-list account-stats">
-            {stats.map(([label, value]) => (
-              <article className="admin-panel account-stat" key={label}>
-                <span className="admin-muted">{label}</span>
-                <h2>{value}</h2>
+      <section className="forma-account-stats">
+        <article><span>الطلبات</span><strong>{orders.length}</strong></article>
+        <article><span>قيد المتابعة</span><strong>{orders.filter((item) => !["مكتمل", "ملغي"].includes(item.status)).length}</strong></article>
+        <article><span>المدفوعات الناجحة</span><strong>{payments.filter((item) => item.status === "paid").length}</strong></article>
+        <article><span>الفواتير</span><strong>{invoices.length}</strong></article>
+      </section>
+
+      <section className="forma-account-grid">
+        <div className="forma-account-panel">
+          <div className="forma-account-panel__head"><span>Requests</span><h2>طلباتي</h2></div>
+          <div className="forma-account-list">
+            {sortedOrders.map((order) => (
+              <article key={order.id}>
+                <div>
+                  <span>{order.packageName || order.serviceType || "طلب خدمة"}</span>
+                  <h3>{order.city || order.projectType || "مشروع جديد"}</h3>
+                  <p>{order.packagePrice || order.budget || "يحدد بعد مراجعة النطاق"}</p>
+                </div>
+                <div className="forma-account-order-meta">
+                  <b>{order.status}</b>
+                  <small>{timestamp(order.createdAt)}</small>
+                  <code>{order.id}</code>
+                </div>
               </article>
             ))}
-          </div>
-
-          <div className="admin-layout mt-5">
-            <section className="admin-panel">
-              <div className="admin-panel__head">
-                <div>
-                  <h2>طلب خدمة</h2>
-                  <p className="admin-muted mb-0">أدخل بيانات المشروع وسيظهر الطلب للأدمن مباشرة.</p>
-                </div>
-              </div>
-              <form className="admin-grid" onSubmit={handleSubmit}>
-                <div className="admin-field">
-                  <label>نوع الطلب</label>
-                  <select value={form.orderType} onChange={(event) => setForm({ ...form, orderType: event.target.value })}>
-                    <option>طلب عرض سعر</option>
-                    <option>شراء مباشر</option>
-                  </select>
-                </div>
-                <div className="admin-field">
-                  <label>نوع الخدمة</label>
-                  <input value={form.serviceType} onChange={(event) => setForm({ ...form, serviceType: event.target.value })} required />
-                </div>
-                <div className="admin-field">
-                  <label>نوع المشروع</label>
-                  <input value={form.projectType} onChange={(event) => setForm({ ...form, projectType: event.target.value })} />
-                </div>
-                <div className="admin-field">
-                  <label>المدينة</label>
-                  <input value={form.city} onChange={(event) => setForm({ ...form, city: event.target.value })} />
-                </div>
-                <div className="admin-field">
-                  <label>الميزانية</label>
-                  <input value={form.budget} onChange={(event) => setForm({ ...form, budget: event.target.value })} />
-                </div>
-                <div className="admin-field">
-                  <label>المساحة التقريبية</label>
-                  <input value={form.area} onChange={(event) => setForm({ ...form, area: event.target.value })} />
-                </div>
-                <div className="admin-field">
-                  <label>طريقة الدفع</label>
-                  <select value={form.paymentMethod} onChange={(event) => setForm({ ...form, paymentMethod: event.target.value })}>
-                    <option>أونلاين</option>
-                    <option>كاش في المكتب</option>
-                    <option>تحويل لاحق</option>
-                  </select>
-                </div>
-                <div className="admin-field">
-                  <label>مرفقات المشروع</label>
-                  <input type="file" multiple onChange={(event) => setFiles(event.target.files)} />
-                </div>
-                <div className="admin-field admin-field--wide">
-                  <label>الملاحظات</label>
-                  <textarea value={form.notes} onChange={(event) => setForm({ ...form, notes: event.target.value })} />
-                </div>
-                <div className="admin-field admin-field--wide">
-                  <button className="btn btn-dark" type="submit" disabled={submitting}>
-                    {submitting ? "جاري الإرسال..." : "إرسال الطلب"}
-                  </button>
-                  {message ? <div className="admin-alert">{message}</div> : null}
-                </div>
-              </form>
-            </section>
-
-            <section className="admin-panel">
-              <div className="admin-panel__head">
-                <div>
-                  <h2>طلباتي وفواتيري</h2>
-                  <p className="admin-muted mb-0">لا تظهر هنا إلا بيانات حسابك الحالي.</p>
-                </div>
-              </div>
-              <div className="admin-list">
-                {orders.map((order) => (
-                  <article className="admin-item admin-item--flat" key={order.id}>
-                    <div>
-                      <h4>{order.serviceType || order.orderType}</h4>
-                      <p>{order.city} / {order.budget} / {order.status}</p>
-                      <p>{order.notes}</p>
-                    </div>
-                  </article>
-                ))}
-                {!orders.length ? <div className="admin-alert">لا توجد طلبات بعد.</div> : null}
-              </div>
-              <div className="admin-list mt-4">
-                {invoices.map((invoice) => (
-                  <article className="admin-item admin-item--flat" key={invoice.id}>
-                    <div>
-                      <h4>{invoice.invoiceNumber || invoice.id}</h4>
-                      <p>{invoice.amount} / {invoice.status}</p>
-                      {invoice.pdf?.[0]?.url ? <a href={invoice.pdf[0].url} target="_blank" rel="noreferrer">عرض الفاتورة</a> : null}
-                    </div>
-                  </article>
-                ))}
-                {!invoices.length ? <div className="admin-alert">لا توجد فواتير بعد.</div> : null}
-              </div>
-            </section>
+            {!sortedOrders.length ? <p className="forma-account-empty">لا توجد طلبات بعد. ابدأ باختيار إحدى خدمات FORMA.</p> : null}
           </div>
         </div>
+
+        <aside className="forma-account-panel">
+          <div className="forma-account-panel__head"><span>Billing</span><h2>المدفوعات والفواتير</h2></div>
+          <div className="forma-account-mini-list">
+            {payments.map((payment) => (
+              <article key={payment.id}>
+                <div><b>{payment.reference || payment.id}</b><span>{payment.status}</span></div>
+                <strong>{Number(payment.amount || 0).toLocaleString("ar-SA")} {payment.currency || "SAR"}</strong>
+              </article>
+            ))}
+            {invoices.map((invoice) => (
+              <article key={invoice.id}>
+                <div><b>{invoice.invoiceNumber || invoice.id}</b><span>{invoice.status}</span></div>
+                {invoice.pdf?.[0]?.url ? <a href={invoice.pdf[0].url} target="_blank" rel="noreferrer">عرض الفاتورة</a> : <strong>{invoice.amount || "-"} ر.س</strong>}
+              </article>
+            ))}
+            {!payments.length && !invoices.length ? <p className="forma-account-empty">لا توجد عمليات مالية بعد.</p> : null}
+          </div>
+        </aside>
+      </section>
       </main>
     </>
   );
