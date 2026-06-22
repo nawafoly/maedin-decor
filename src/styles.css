@@ -3,6 +3,36 @@
   min-height: 1px;
 }
 
+.forma-state-panel {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 34px;
+  border: 1px solid rgba(20, 20, 20, 0.14);
+  background: #fff;
+  text-align: center;
+}
+
+.forma-state-panel h3 {
+  margin: 0 0 10px;
+  color: #171717;
+}
+
+.forma-state-panel p,
+.forma-state-panel small {
+  margin: 0;
+  color: #68625d;
+}
+
+.forma-state-panel small {
+  display: block;
+  margin-top: 12px;
+  overflow-wrap: anywhere;
+}
+
+.forma-state-panel.is-error {
+  border-color: rgba(155, 61, 55, 0.28);
+}
+
 .modal-body video {
   width: 100%;
   height: 100%;
@@ -32,8 +62,16 @@
 }
 
 .page-title-logo {
-  width: clamp(128px, 13vw, 210px);
+  display: block;
+  width: clamp(86px, 7vw, 118px);
   margin: 0 auto clamp(18px, 2.4vw, 30px);
+  transform: translateX(-8px);
+}
+
+.page-title-logo img {
+  display: block;
+  width: 100%;
+  height: auto;
 }
 
 .page-title h1,
@@ -44,6 +82,7 @@
 }
 
 .page-title h1 {
+  display: none;
   max-width: 920px;
   margin-inline: auto;
   color: #171615;
@@ -788,6 +827,16 @@ html[dir="rtl"] .admin-upload-list {
 .forma-form-message,
 .forma-empty {
   color: #8c6b45;
+  font-weight: 800;
+}
+
+.forma-admin-alert {
+  margin-bottom: 14px;
+  padding: 12px 14px;
+  border: 1px solid rgba(155, 61, 55, 0.24);
+  border-radius: 8px;
+  background: #fff4f2;
+  color: #8d342f;
   font-weight: 800;
 }
 

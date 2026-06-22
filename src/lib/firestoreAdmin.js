@@ -3,6 +3,7 @@ import {
   collection,
   deleteDoc,
   doc,
+  getDoc,
   getDocs,
   onSnapshot,
   serverTimestamp,
@@ -277,7 +278,7 @@ export const adminSections = [
   },
 ];
 
-export function subscribeCollection(collectionName, callback) {
+export function subscribeCollection(collectionName, callback, onError) {
   return onSnapshot(collection(db, collectionName), (snapshot) => {
     const items = snapshot.docs
       .map((item) => ({ id: item.id, ...item.data() }))
@@ -287,7 +288,7 @@ export function subscribeCollection(collectionName, callback) {
         return first - second;
       });
     callback(items);
-  });
+  }, onError);
 }
 
 export async function saveAdminDocument(section, payload, editingId, user) {
@@ -331,9 +332,13 @@ function imageFile(url, name = "صورة محلية") {
   return url ? [{ url, key: url, name, source: "public" }] : [];
 }
 
-function seedDoc(collectionName, id, payload, user) {
-  return setDoc(
-    doc(db, collectionName, id),
+async function seedDoc(collectionName, id, payload, user) {
+  const documentRef = doc(db, collectionName, id);
+  const existing = await getDoc(documentRef);
+  if (existing.exists()) return false;
+
+  await setDoc(
+    documentRef,
     {
       ...payload,
       source: "legacy-seed",
@@ -343,6 +348,7 @@ function seedDoc(collectionName, id, payload, user) {
     },
     { merge: true },
   );
+  return true;
 }
 
 export async function importExistingSiteData(user) {
@@ -464,6 +470,6 @@ export async function importExistingSiteData(user) {
     }, user),
   );
 
-  await Promise.all(writes);
-  return writes.length;
+  const results = await Promise.all(writes);
+  return results.filter(Boolean).length;
 }

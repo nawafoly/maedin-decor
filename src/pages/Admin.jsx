@@ -315,7 +315,7 @@ function DashboardOverview({ data, onSeed, seedState }) {
         </div>
         <div className="forma-hero-actions">
           <button className="forma-admin-primary" type="button" onClick={onSeed} disabled={seedState.loading}>
-            {seedState.loading ? "جاري الاستيراد..." : "استيراد البيانات الحالية"}
+            {seedState.loading ? "جاري فحص البيانات..." : "إضافة البيانات الناقصة فقط"}
           </button>
           <small>{seedState.message || `${publicItems} عنصر منشور في Firestore`}</small>
         </div>
@@ -660,12 +660,17 @@ export default function Admin() {
   const [seedState, setSeedState] = useState({ loading: false, message: "" });
   const [draft, setDraft] = useState(null);
   const [packageDefaultsChecked, setPackageDefaultsChecked] = useState(false);
+  const [collectionError, setCollectionError] = useState("");
 
   useEffect(() => {
     const uniqueCollections = [...new Set(adminSections.map((section) => section.collectionName))];
     const unsubscribers = uniqueCollections.map((collectionName) =>
       subscribeCollection(collectionName, (items) => {
         setData((current) => ({ ...current, [collectionName]: items }));
+        setCollectionError("");
+      }, (error) => {
+        console.error(`Admin ${collectionName} snapshot error:`, error);
+        setCollectionError(error.message || `تعذر تحميل بيانات ${collectionName}.`);
       }),
     );
     return () => unsubscribers.forEach((unsubscribe) => unsubscribe());
@@ -703,7 +708,7 @@ export default function Admin() {
     setSeedState({ loading: true, message: "" });
     try {
       const count = await importExistingSiteData(user);
-      setSeedState({ loading: false, message: `تم استيراد ${count} سجل إلى Firestore.` });
+      setSeedState({ loading: false, message: count ? `تمت إضافة ${count} سجل ناقص إلى Firestore.` : "لا توجد بيانات ناقصة. لم يتم تغيير السجلات الحالية." });
     } catch (error) {
       console.error("Seed import error:", error);
       setSeedState({ loading: false, message: error.message || "تعذر استيراد البيانات." });
@@ -784,6 +789,8 @@ export default function Admin() {
               ))}
           </div>
         ) : null}
+
+        {collectionError ? <div className="forma-admin-alert">{collectionError}</div> : null}
 
         {active === "overview" ? (
           <DashboardOverview data={data} onSeed={handleSeed} seedState={seedState} />

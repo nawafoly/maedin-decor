@@ -1,6 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
 import { Link, useSearchParams } from "react-router-dom";
-import LegacyPage from "../components/LegacyPage";
 import NewsletterSection from "../components/NewsletterSection";
 import PageTitle from "../components/PageTitle";
 import { useLanguage } from "../contexts/LanguageContext";
@@ -138,8 +137,45 @@ export default function Designs() {
     return sortPublicDesigns(matches, sortMode);
   }, [activeFilter, language, query, sortMode, visibleDesigns]);
 
-  if ((loading || error) && !designs.length) {
-    return <LegacyPage page="shop" />;
+  if (loading && !designs.length) {
+    return (
+      <>
+        <PageTitle title={language === "ar" ? "التصاميم" : "Designs"} />
+        <main className="page-content product-store Designs-page padding-large">
+          <div className="container">
+            <div className="forma-state-panel">
+              <h3>{language === "ar" ? "جاري تحميل التصاميم" : "Loading designs"}</h3>
+              <p>
+                {language === "ar"
+                  ? "يتم جلب أحدث البيانات من لوحة التحكم."
+                  : "Fetching the latest dashboard data."}
+              </p>
+            </div>
+          </div>
+        </main>
+      </>
+    );
+  }
+
+  if (error && !designs.length) {
+    return (
+      <>
+        <PageTitle title={language === "ar" ? "التصاميم" : "Designs"} />
+        <main className="page-content product-store Designs-page padding-large">
+          <div className="container">
+            <div className="forma-state-panel is-error">
+              <h3>{language === "ar" ? "تعذر تحميل التصاميم من لوحة التحكم" : "Could not load dashboard designs"}</h3>
+              <p>
+                {language === "ar"
+                  ? "تحقق من اتصال Firestore أو صلاحيات القراءة. لن يتم عرض البيانات القديمة كبديل حتى لا تختلط مع تعديلاتك."
+                  : "Check the Firestore connection or read permissions. Old bundled data is no longer shown as a fallback."}
+              </p>
+              {import.meta.env.DEV ? <small>{error}</small> : null}
+            </div>
+          </div>
+        </main>
+      </>
+    );
   }
 
   return (
